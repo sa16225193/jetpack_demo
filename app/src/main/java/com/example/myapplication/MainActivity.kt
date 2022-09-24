@@ -1,6 +1,8 @@
 package com.example.myapplication
 
+import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -32,6 +34,23 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
+        /*
+        Activity destroy之前没有dismiss dialog，导致内存泄漏
+         */
+//        showDialogAndFinish(TipDialog(this))
+
+        /*
+        使用了LifeCycle的Dialog，在activity destroy时自动dismiss
+         */
+        showDialogAndFinish(LifeCycleTipDialog(this))
+    }
+
+    private fun showDialogAndFinish(dialog: Dialog) {
+        dialog.show()
+        Handler().postDelayed({
+            finish()
+        }, 2000)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
